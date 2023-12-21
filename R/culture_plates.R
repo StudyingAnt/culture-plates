@@ -3,59 +3,72 @@
 # Default dimension setting
 #
 ################################################################################
-default_dimension <- list(
-  `6 well` = list(
-    dim = c(2, 3),
-    plate_outer = c(127.76, 85.47),
-    a1_offset = c(26.76, 25.47),
-    well_well = 39.12,
-    d = 35.43
-  ),
-  `12 well` = list(
-    dim = c(3, 4),
-    plate_outer = c(127.76, 85.47),
-    a1_offset = c(24.94, 16.79),
-    well_well = 26.01,
-    d = 24.73
-  ),
-  `24 well` = list(
-    dim = c(4, 6),
-    plate_outer = c(127.76, 85.47),
-    a1_offset = c(17.76, 14.47),
-    well_well = 19.3,
-    d = 18.26
-  ),
-  `48 well` = list(
-    dim = c(6, 8),
-    plate_outer = c(127.76, 85.47),
-    a1_offset = c(18.76, 10.47),
-    well_well = 13.38,
-    d = 12.56
-  ),
-  `96 well` = list(
-    dim = c(8, 12),
-    plate_outer = c(127.76, 85.47),
-    a1_offset = c(11.76, 10.47),
-    well_well = 9.88,
-    d = 9.63
-  )
-)
+
 
 ################################################################################
 #
 # Empty 6-96 well plate
 #
 ################################################################################
+#' Draw empty plate
+#'
+#' @param plate_type Plate type e.g. 6 wells
+#' @param ref dimension for plates
+#'
+#' @return ggplot of plate
+#' @export
+#'
+#'
+#' @examples culture_plate_empty("6 wells")
+
 culture_plate_empty <- function(plate_type, ref = default_dimension) {
+  default_dimension <- list(
+    `6 wells` = list(
+      dim = c(2, 3),
+      plate_outer = c(127.76, 85.47),
+      a1_offset = c(26.76, 25.47),
+      well_well = 39.12,
+      d = 35.43
+    ),
+    `12 wells` = list(
+      dim = c(3, 4),
+      plate_outer = c(127.76, 85.47),
+      a1_offset = c(24.94, 16.79),
+      well_well = 26.01,
+      d = 24.73
+    ),
+    `24 wells` = list(
+      dim = c(4, 6),
+      plate_outer = c(127.76, 85.47),
+      a1_offset = c(17.76, 14.47),
+      well_well = 19.3,
+      d = 18.26
+    ),
+    `48 wells` = list(
+      dim = c(6, 8),
+      plate_outer = c(127.76, 85.47),
+      a1_offset = c(18.76, 10.47),
+      well_well = 13.38,
+      d = 12.56
+    ),
+    `96 wells` = list(
+      dim = c(8, 12),
+      plate_outer = c(127.76, 85.47),
+      a1_offset = c(11.76, 10.47),
+      well_well = 9.88,
+      d = 9.63
+    )
+  )
+
   # dimension
-  n_row         <- default_dimension[[plate_type]][["dim"]][1]
-  n_col         <- default_dimension[[plate_type]][["dim"]][2]
-  plate_length  <- default_dimension[[plate_type]][["plate_outer"]][1]
-  plate_width   <- default_dimension[[plate_type]][["plate_outer"]][2]
-  a1_row_offset <- default_dimension[[plate_type]][["a1_offset"]][1]
-  a1_col_offset <- default_dimension[[plate_type]][["a1_offset"]][2]
-  well_well     <- default_dimension[[plate_type]][["well_well"]][1]
-  d             <- default_dimension[[plate_type]][["d"]][1]
+  n_row         <- ref[[plate_type]][["dim"]][1]
+  n_col         <- ref[[plate_type]][["dim"]][2]
+  plate_length  <- ref[[plate_type]][["plate_outer"]][1]
+  plate_width   <- ref[[plate_type]][["plate_outer"]][2]
+  a1_row_offset <- ref[[plate_type]][["a1_offset"]][1]
+  a1_col_offset <- ref[[plate_type]][["a1_offset"]][2]
+  well_well     <- ref[[plate_type]][["well_well"]][1]
+  d             <- ref[[plate_type]][["d"]][1]
   r             <- d/2
 
   row_label_offset <- (a1_row_offset-r)/2
@@ -80,10 +93,10 @@ culture_plate_empty <- function(plate_type, ref = default_dimension) {
     for (j in 1:n_col){
       x0 <- a1_row_offset+(j-1)*well_well
       y0 <- plate_width-a1_col_offset-(i-1)*well_well
-      plate_plot <- plate_plot + geom_circle(aes(x0 = {{x0}},
-                                                 y0 = {{y0}},
-                                                 r=r),
-                                             inherit.aes = FALSE)
+      plate_plot <- plate_plot + ggforce::geom_circle(aes(x0 = {{x0}},
+                                                          y0 = {{y0}},
+                                                          r=r),
+                                                      inherit.aes = FALSE)
 
     }
   }
