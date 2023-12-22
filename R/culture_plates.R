@@ -210,16 +210,19 @@ culture_plate <- function(data,
     "#0aff99", "#0aefff", "#147df5", "#580aff", "#be0aff"
   )
 
-  if ("color" %in% colnames(data)) {
+  if (!("color" %in% colnames(data))) {
+    # data.condition <- unite(data, new_condition, condition_columns)
+    # conditions <- data.condition %>% select(new_condition) %>% distinct()
+    #
+    # data.condition <- data.condition %>% rowwise() %>%
+    #   mutate(color = color[which(conditions == new_condition)])
+    #
+    # data$color <- data.condition$color
+    data <- unite(data, new_condition, condition_columns)
+    conditions <- data %>% select(new_condition) %>% distinct()
 
-  } else {
-    data.condition <- unite(data, new_condition, condition_columns)
-    conditions <- data.condition %>% select(new_condition) %>% distinct()
-
-    data.condition <- data.condition %>% rowwise() %>%
+    data <- data %>% rowwise() %>%
       mutate(color = color[which(conditions == new_condition)])
-
-    data$color <- data.condition$color
   }
 
   # dimension
